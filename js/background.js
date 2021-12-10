@@ -1,4 +1,4 @@
-const SERVER_URL = "./my_model/"
+const SERVER_URL = "https://fazerog02.github.io/ZoomAutoEmote/AutoEmote/"
 
 
 async function init() {
@@ -13,7 +13,7 @@ async function init() {
         value: await tmImage.load(modelURL, metadataURL)
     })
     Object.defineProperty(window, "num_of_classes", {
-        value: model.getTotalClasses()
+        value: window.prediction_model.getTotalClasses()
     })
 
     const flip = true
@@ -55,12 +55,12 @@ function changeEmote() {
     }
 
     document.querySelector("[aria-label=リアクション]").click()
-    document.querySelector(`data-tooltip=${tooltip_name}`).click()
+    document.querySelector(`[data-tooltip=${tooltip_name}]`).click()
 }
 
 
 async function predict() {
-    const predictions = await window.model.predict(window.webcam.canvas);
+    const predictions = await window.prediction_model.predict(window.webcam.canvas);
     let max_probability = -1
     let max_probability_class_name = null
     for (let i = 0; i < window.num_of_classes; i++) {
@@ -78,9 +78,4 @@ async function predict() {
 }
 
 
-chrome.action.onClicked.addListener(async (tab) => {
-	chrome.tabs.executeScript({
-		target: { tabId: tab.id },
-		function: async () => await init()
-	})
-})
+init()
